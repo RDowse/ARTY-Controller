@@ -4,29 +4,36 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT += core gui
+QT += qml quick widgets svg declarative
 
-greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
+greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
 TARGET = Controller
 TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        mainwindow.cpp \
-    #test.cpp
+    roshandler.cpp
 
-HEADERS  += mainwindow.h
+HEADERS  += \
+    roshandler.h
 
-FORMS    += mainwindow.ui
+FORMS    +=
 
 CONFIG += mobility
 MOBILITY = 
 
+RESOURCES += qml.qrc
 
-LIBS += -L$$PWD/../roscpp_android_ndk/lib/ -lroscpp  -lboost_signals -lboost_filesystem -lrosconsole -lrosconsole_print -lrosconsole_backend_interface -lboost_regex -lxmlrpcpp -lroscpp_serialization -lrostime -lboost_date_time -lcpp_common -lboost_system -lboost_thread -lconsole_bridge
+LIBS += -L$$PWD/../roscpp_android_ndk/lib/ -lroscpp  -lboost_signals -lboost_filesystem -lrosconsole -lrosconsole_print -lrosconsole_backend_interface -lboost_regex -lxmlrpcpp -lroscpp_serialization -lrostime -lcpp_common -lboost_date_time  -lboost_system -lboost_thread  -lconsole_bridge
 
 INCLUDEPATH += $$PWD/../roscpp_android_ndk/include
 DEPENDPATH += $$PWD/../roscpp_android_ndk/include
 
 #PRE_TARGETDEPS += $$PWD/../roscpp_android_ndk/lib/libroscpp.a
+
+DISTFILES +=
+
+RESOURCES += \
+    qml.qrc
