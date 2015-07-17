@@ -11,6 +11,7 @@ ApplicationWindow {
     property int margin: 11
     visible: true
 
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
@@ -54,17 +55,21 @@ ApplicationWindow {
             Layout.fillWidth: true
             Layout.fillHeight: true
             Rectangle{
-                id: rectangle1
+                id: area
                 height: parent.height
                 width: parent.height
                 color: "#d3d3d3"
-                radius: 100
+                radius: width*0.5
                 anchors.verticalCenter: parent.verticalCenter
                 anchors.horizontalCenter: parent.horizontalCenter
 
                 Image {
                     id: joystick
                     source: "Bluebubble.svg"
+                    width: parent.width / 5;
+                    height: parent.height / 5;
+                    x: startPosX
+                    y: startPosY
                     property real centerX: parent.width / 2
                     property real centerY: parent.height / 2
                     property real joyStickCenter: joystick.width / 2
@@ -72,8 +77,7 @@ ApplicationWindow {
                     property real startPosY: centerY - joyStickCenter
                     property double velocity: 0.0
                     property double angle: 0.0
-                    x: startPosX
-                    y: startPosY
+
 
                     Behavior on y {
                         SmoothedAnimation {
@@ -115,7 +119,6 @@ ApplicationWindow {
 
                             joystick.velocity = Math.cos(tempAng);
                             joystick.angle = Math.sin(-tempAng);
-                            console.log("X: " + x + " Y: " + y + " Ang: " + tempAng );
                             console.log("Velocity: "+ joystick.velocity + " Angle: " + joystick.angle);
                             roshandler.setVelAng(joystick.velocity, joystick.angle);
                         }

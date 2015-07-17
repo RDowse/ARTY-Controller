@@ -8,7 +8,7 @@
 #include <stdio.h>
 #include <sstream>
 #include <map>
-#include <string.h>
+#include <string>
 #include <errno.h>
 #include <vector>
 #include <set>
@@ -29,11 +29,13 @@ private:
     QTimer rosTimer_;
     void timerInit();
     void rosInit();
+    bool checkTopics();
 public:
     explicit ROShandler(QObject *parent);
     ROShandler();
     ~ROShandler(){}
     Q_INVOKABLE void setVelAng(double linear, double angular);
+    Q_INVOKABLE void shutdownROS();
 signals:
     void log(QString msg);
 };
