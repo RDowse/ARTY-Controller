@@ -99,8 +99,8 @@ void ROShandler::setVelAng(double linear, double angular)
 {
     linear_ = linear;
     angular_ = angular;
-    std::string str = "Velocity: " + boost::lexical_cast<std::string>(linear)
-        + " Angle: " + boost::lexical_cast<std::string>(angular);
+    QString s = "Velocity: " + QString::number(linear) + " Angle: " + QString::number(angular);
+    emit log(s);
 }
 
 void ROShandler::shutdownROS()
