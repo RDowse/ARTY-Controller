@@ -2,6 +2,7 @@ import QtQuick 2.0
 import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import uk.ac.imperial.prl 1.0
+import QtQuick.Window 2.0
 
 ApplicationWindow {
     title: qsTr("Arty Controller")
@@ -10,21 +11,8 @@ ApplicationWindow {
     height: 600
     property int margin: 11
     visible: true
-
-
-    menuBar: MenuBar {
-        Menu {
-            title: qsTr("File")
-            MenuItem {
-                text: qsTr("&Open")
-                onTriggered: console.log("Open action triggered");
-            }
-            MenuItem {
-                text: qsTr("Exit")
-                onTriggered: Qt.quit();
-            }
-        }
-    }
+    visibility: Window.FullScreen
+    //contentOrientation: Window.
 
     ROShandler {
         id: roshandler
@@ -34,20 +22,41 @@ ApplicationWindow {
         }
     }
 
+    menuBar: MenuBar {
+        Menu {
+            title: qsTr("File")
+            MenuItem {
+                text: qsTr("Settings")
+                onTriggered: ld.source="settings.qml";
+            }
+            MenuItem {
+                text: qsTr("Exit")
+                onTriggered: Qt.quit();
+            }
+            Loader{
+                id:ld;
+                anchors.fill: parent;
+            }
+        }
+    }
+
+
+    Label{
+        //Shows log messages
+        id: status
+        Layout.minimumHeight: 30
+        Layout.fillHeight: true
+        Layout.fillWidth: true
+        text: qsTr("message")
+    }
+
     Column {
         id: mainLayout
         anchors.fill: parent
         anchors.margins: margin
         spacing: 5
 
-        Label{
-            //Shows log messages
-            id: status
-            Layout.minimumHeight: 30
-            Layout.fillHeight: true
-            Layout.fillWidth: true
-            text: qsTr("message")
-        }
+
         GroupBox{
             //Area where the joystick can move.
             id: controller
