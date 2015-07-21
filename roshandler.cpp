@@ -99,7 +99,8 @@ void ROShandler::setVelAng(double linear, double angular)
 {
     linear_ = linear;
     angular_ = angular;
-    QString s = "Velocity: " + QString::number(linear) + " Angle: " + QString::number(angular);
+    QString s = "Velocity: " + QString::number(linear)
+            + " Angle: " + QString::number(angular);
     emit log(s);
 }
 

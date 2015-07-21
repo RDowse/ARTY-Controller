@@ -2,19 +2,16 @@
 #define ROSHANDLER_H
 
 #include <ros/ros.h>
-#include <std_msgs/String.h>
 
 #include <stdarg.h>
 #include <stdio.h>
-#include <sstream>
 #include <map>
-#include <string>
 #include <errno.h>
 #include <vector>
 #include <set>
 #include <fstream>
 #include <android/log.h>
-#include <qobject.h>
+#include <QObject>
 #include <qtimer.h>
 #include <QString>
 

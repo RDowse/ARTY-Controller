@@ -14,10 +14,12 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-    roshandler.cpp
+    roshandler.cpp \
+    hapticfeedback.cpp
 
 HEADERS  += \
-    roshandler.h
+    roshandler.h \
+    hapticfeedback.h
 
 FORMS    +=
 
