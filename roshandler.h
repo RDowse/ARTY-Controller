@@ -21,6 +21,7 @@ class ROShandler : public QObject
 private:
     double linear_, angular_;
     ros::Publisher vel_pub_;
+    QString masterIP_;
     QString logMsg_;
     QTimer pubTimer_;
     QTimer rosTimer_;
@@ -31,8 +32,11 @@ public:
     explicit ROShandler(QObject *parent);
     ROShandler();
     ~ROShandler(){}
+    Q_INVOKABLE void restartROS();
     Q_INVOKABLE void setVelAng(double linear, double angular);
     Q_INVOKABLE void shutdownROS();
+    Q_INVOKABLE void setMasterIP(QString masterIP);
+    Q_INVOKABLE QString getMasterIP();
 signals:
     void log(QString msg);
 };

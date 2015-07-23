@@ -17,8 +17,7 @@ void sendMsg(ros::Publisher& pub, double linear, double angular)
 
 void rosSpin() { ros::spinOnce(); }
 
-}//End of anonymous namespace
-
+} // End of anonymous namespace
 
 ROShandler::ROShandler(QObject* parent)
     : QObject(parent)
@@ -42,12 +41,20 @@ void ROShandler::timerInit()
 
 void ROShandler::rosInit()
 {
-    qDebug() << "Hello World!";
+    //    int ros_argc = 3;
+    //    char *ros_argv[] = {"nothing_important" ,
+    //    "__master:=http://10.0.1.3:11311", "__ip:=10.0.1.4"};
+    //    ros::init(ros_argc, &ros_argv[0], "android_ndk_native_cpp");
+    //    ros::master::setRetryTimeout(ros::WallDuration(0.1));
+    //    ros::NodeHandle n;
+    //    vel_pub_ =
+    //    n.advertise<geometry_msgs::Twist>("/arty_navigation/main_js_cmd_vel",
+    //    1);
 
     if (!ros::isInitialized())
     {
         int ros_argc = 3;
-
+        emit log("Attempting to connect");
         // get the devices local ip
         QString localIP;
         foreach (const QHostAddress& address, QNetworkInterface::allAddresses())
@@ -56,24 +63,27 @@ void ROShandler::rosInit()
                 && address != QHostAddress(QHostAddress::LocalHost))
                 localIP = "__ip:=" + address.toString();
         }
-
         const char* ros_argv[] = { "nothing_important",
-            "__master:=http://10.0.0.92:11311", localIP.toStdString().c_str() };
+            "__master:=http://10.0.0.1:11311", localIP.toStdString().c_str() };
         ros::init(ros_argc, const_cast<char**>(&ros_argv[0]),
             "android_ndk_native_cpp");
         ros::master::setRetryTimeout(ros::WallDuration(0.1));
-
         qDebug() << "ROS initialised";
-        if (checkTopics())
-        {
-            qDebug() << "Creating nodehandle";
-            ros::NodeHandle n;
-            vel_pub_ = n.advertise<geometry_msgs::Twist>(
-                "/navigation/main_js_cmd_vel", 1);
-            timerInit();
-        } else{
-            qDebug() << "Failed to create nodehandle";
-        }
+    }
+
+    if (checkTopics())
+    {
+        qDebug() << "Creating nodehandle";
+        ros::NodeHandle n;
+        vel_pub_ = n.advertise<geometry_msgs::Twist>(
+            "/arty_navigation/main_js_cmd_vel", 1);
+        timerInit();
+        emit log("Successfully connect ROS node");
+    }
+    else
+    {
+        qDebug() << "Failed to create nodehandle";
+        emit log("Failed to create nodehandle");
     }
 }
 
@@ -104,8 +114,18 @@ void ROShandler::setVelAng(double linear, double angular)
     emit log(s);
 }
 
+void ROShandler::restartROS()
+{
+    // attempt to initialise ros again
+    rosInit();
+}
+
 void ROShandler::shutdownROS()
 {
     ros::shutdown();
     emit log("The ROS node has been terminated");
 }
+
+void ROShandler::setMasterIP(QString masterIP) { masterIP_ = masterIP; }
+
+QString ROShandler::getMasterIP(){ return masterIP_; }

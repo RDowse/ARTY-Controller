@@ -4,14 +4,13 @@
 #
 #-------------------------------------------------
 
-QT += core gui
+QT += core gui androidextras
 QT += qml quick widgets svg declarative
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
 TARGET = Controller
 TEMPLATE = app
-
 
 SOURCES += main.cpp\
     roshandler.cpp \
@@ -35,7 +34,8 @@ DEPENDPATH += $$PWD/../roscpp_android_ndk/include
 
 #PRE_TARGETDEPS += $$PWD/../roscpp_android_ndk/lib/libroscpp.a
 
-DISTFILES +=
+DISTFILES += \
+    Vibrate.java
 
 RESOURCES += \
     qml.qrc

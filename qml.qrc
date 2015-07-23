@@ -3,5 +3,8 @@
         <file>main.qml</file>
         <file>Bluebubble.svg</file>
         <file>Redbubble.svg</file>
+        <file>sounds/off/S3K_4D.wav</file>
+        <file>sounds/on/S3K_33.wav</file>
+        <file>settings.qml</file>
     </qresource>
 </RCC>

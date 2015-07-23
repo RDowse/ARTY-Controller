@@ -3,6 +3,8 @@ import QtQuick.Controls 1.1
 import QtQuick.Layouts 1.1
 import uk.ac.imperial.prl 1.0
 import QtQuick.Window 2.0
+import QtMultimedia 5.0
+import QtQml 2.2
 
 ApplicationWindow {
     title: qsTr("Arty Controller")
@@ -22,20 +24,29 @@ ApplicationWindow {
         }
     }
 
+    Loader {
+        id: loader
+        anchors.fill: parent
+    }
+
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
             MenuItem {
+                text: qsTr("Clear")
+                onTriggered: multiTouchTracking.clear();
+            }
+            MenuItem {
+                text: qsTr("Reconnect")
+                onTriggered: roshandler.restartROS();
+            }
+            MenuItem {
                 text: qsTr("Settings")
-                onTriggered: ld.source="settings.qml";
+                onTriggered: loader.source = "settings.qml";
             }
             MenuItem {
                 text: qsTr("Exit")
                 onTriggered: Qt.quit();
-            }
-            Loader{
-                id:ld;
-                anchors.fill: parent;
             }
         }
     }
@@ -93,7 +104,7 @@ ApplicationWindow {
             SequentialAnimation{
                 ScaleAnimator {
                     target: joystick
-                    from: 1
+                    from: 1.0
                     to: 1.5
                     duration: 1000
                 }
@@ -108,10 +119,49 @@ ApplicationWindow {
             }
         }
 
+        Canvas{
+            //area for drawing dots to track the multitouch points.
+
+            id:multiTouchTracking
+            anchors.fill: parent
+            antialiasing: true
+            property real radius: 25
+            property list<TouchPoint> touchPoints
+
+            function updateTouchPoints(touchPoints){
+                this.touchPoints = touchPoints;
+                requestPaint();
+            }
+
+            function clear(){
+                var context = getContext("2d");
+
+                context.clearRect(0, 0, width, height);
+            }
+
+            onPaint: {
+                var context = getContext("2d");
+                context.save();
+
+                context.clearRect(0, 0, width, height);
+                for( var i = 0; i < touchPoints.length; i++){
+                    context.beginPath();
+                    context.arc(touchPoints[i].x, touchPoints[i].y, radius, 0, 2 * Math.PI, false);
+                    context.fillStyle = 'green';
+                    context.fill();
+                    context.lineWidth = 5;
+                    context.strokeStyle = '#003300';
+                    context.stroke();
+                 }
+            }
+        }
+
         MultiPointTouchArea {
             id: touchArea
             anchors.fill: parent
             property bool touch: false;
+            property bool ready: true;
+            maximumTouchPoints: 20;
             function averagePoints(touchPoints){
                 var sumX = 0, sumY = 0;
                 for( var i = 0; i < touchPoints.length; i++){
@@ -128,16 +178,17 @@ ApplicationWindow {
                 var y = joystick.startPosY - joystick.y;
 
                 var tempAng = Math.atan2(x,y);
+                var tempDist = Math.sqrt(x*x + y*y);
 
-                var velocity = Math.cos(tempAng);
-                var angle = Math.sin(-tempAng);
+                var velocity = Math.cos(tempAng)*(tempDist/area.radius);
+                var angle = Math.sin(-tempAng)*(tempDist/area.radius);
 
                 return {velocity:velocity,angle:angle};
             }
 
             function setPosition(x,y){
-                var diffX = x - joystick.startPosX;
-                var diffY = joystick.startPosY - y;
+                var diffX = x - (joystick.startPosX + joystick.radius);
+                var diffY = (joystick.startPosY + joystick.radius) - y;
                 var tempAng = Math.atan2(diffX,diffY);
                 var distance = Math.sqrt(diffX*diffX + diffY*diffY);
 
@@ -155,12 +206,6 @@ ApplicationWindow {
                 roshandler.setVelAng(velocity, angle);
             }
 
-            function drawTouchPoints(touchPoints){
-                for( var i = 0; i < touchPoints.length; i++){
-                    //painter.drawEllipse(new Qt.point(touchPoints[i].x,touchPoints[i].y), 5, 5);
-                }
-            }
-
             onTouchUpdated:{
                 //When the joystick is released reset the position.
                 if(touchPoints.length === 0){
@@ -168,13 +213,30 @@ ApplicationWindow {
                     joystick.y = joystick.startPosY;
                     roshandler.setVelAng(0.0,0.0);
                     touch = false;
+                    offSound.play();
+                    ready = true;
                     return;
+                } else if(ready){
+                    onSound.play();
+                    ready = false;
                 }
                 touch = true;
                 var newPosition = averagePoints(touchPoints);
                 setPosition(newPosition.x,newPosition.y);
                 var newVelocityAngle = calcVelocityAngle();
                 sendVelocityAngle(newVelocityAngle.velocity, newVelocityAngle.angle);
+                multiTouchTracking.updateTouchPoints(touchPoints);
+            }
+
+            SoundEffect {
+                id: onSound
+                source: "sounds/on/S3K_33.wav"
+                muted: true
+            }
+            SoundEffect{
+                id: offSound
+                source: "sounds/off/S3K_4D.wav"
+                muted: true
             }
         }
     }
