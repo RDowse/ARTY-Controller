@@ -21,7 +21,6 @@ ApplicationWindow {
         }
     }
 
-
     menuBar: MenuBar {
         Menu {
             title: qsTr("File")
@@ -46,38 +45,62 @@ ApplicationWindow {
         }
     }
 
+    GridLayout {
+        anchors.fill: parent
+        columns: 2
+        rows: 1
+        columnSpacing: 2
 
-    Label{
-        //Shows log messages
-        id: status
-        Layout.minimumHeight: 30
-        Layout.fillHeight: true
-        Layout.fillWidth: true
-        text: qsTr("Console")
-    }
+        Column{
+            Layout.alignment: Qt.AlignTop
+            Layout.column: 1
+            Layout.row: 1
+            Label{
+                //Shows log messages
+                id: status
+                Layout.minimumHeight: 30
+                Layout.fillHeight: true
+                width: 600
+                text: qsTr("Console")
+            }
 
-    Controller{
-        id: controller
+            Image {
+                id:mapArea
+                source: "image://imagehandler/map"
+                cache: false
+                width: 600
+                height: 400
+
+                // http://stackoverflow.com/a/17734973
+                function reload() {
+                    var oldSource = source;
+                    source = "";
+                    source = oldSource;
+                }
+            }
+
+            TouchPointTracking{
+                id:touchPointTracking
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                height: 600
+                width: 600
+            }
+        }
+
+        Controller{
+            id: controller
+            Layout.column: 2
+            Layout.row: 1
+            Layout.fillHeight: true
+            Layout.fillWidth: true
+        }
+
     }
 
     Loader {
         id: loader
         anchors.fill: parent
-    }
-
-
-    Image {
-        id:mapArea
-        source: "image://imagehandler/map"
-        cache: false
-        width: 300
-        height: 300
-        // http://stackoverflow.com/a/17734973
-        function reload() {
-            var oldSource = source;
-            source = "";
-            source = oldSource;
-        }
     }
 
     Connections {

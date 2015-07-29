@@ -1,10 +1,14 @@
 <RCC>
     <qresource prefix="/">
         <file>main.qml</file>
-        <file>Bluebubble.svg</file>
-        <file>Redbubble.svg</file>
         <file>sounds/off/S3K_4D.wav</file>
         <file>sounds/on/S3K_33.wav</file>
-        <file>settings.qml</file>
+        <file>SettingsMenu.qml</file>
+        <file>Settings.qml</file>
+        <file>images/Bluebubble.svg</file>
+        <file>images/Redbubble.svg</file>
+        <file>Joystick.qml</file>
+        <file>Controller.qml</file>
+        <file>TouchPointTracking.qml</file>
     </qresource>
 </RCC>

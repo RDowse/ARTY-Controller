@@ -1,9 +1,10 @@
 #include "roshandler.h"
 #include <geometry_msgs/Twist.h>
+
 #include <QTimer>
 #include <QHostAddress>
 #include <QNetworkInterface>
-
+#include <string>
 namespace
 {
 void sendMsg(ros::Publisher& pub, double linear, double angular)
@@ -41,33 +42,24 @@ void ROShandler::timerInit()
 
 void ROShandler::rosInit()
 {
-    //    int ros_argc = 3;
-    //    char *ros_argv[] = {"nothing_important" ,
-    //    "__master:=http://10.0.1.3:11311", "__ip:=10.0.1.4"};
-    //    ros::init(ros_argc, &ros_argv[0], "android_ndk_native_cpp");
-    //    ros::master::setRetryTimeout(ros::WallDuration(0.1));
-    //    ros::NodeHandle n;
-    //    vel_pub_ =
-    //    n.advertise<geometry_msgs::Twist>("/arty_navigation/main_js_cmd_vel",
-    //    1);
-
     if (!ros::isInitialized())
     {
         int ros_argc = 3;
         emit log("Attempting to connect");
         // get the devices local ip
-        QString localIP;
+        std::string localIP;
         foreach (const QHostAddress& address, QNetworkInterface::allAddresses())
         {
             if (address.protocol() == QAbstractSocket::IPv4Protocol
                 && address != QHostAddress(QHostAddress::LocalHost))
-                localIP = "__ip:=" + address.toString();
+                localIP = "__ip:=" + address.toString().toStdString();
         }
+
         const char* ros_argv[] = { "nothing_important",
-            "__master:=http://10.0.0.1:11311", localIP.toStdString().c_str() };
+            "__master:=http://10.0.0.147:11311", localIP.c_str()};
         ros::init(ros_argc, const_cast<char**>(&ros_argv[0]),
             "android_ndk_native_cpp");
-        ros::master::setRetryTimeout(ros::WallDuration(0.1));
+        ros::master::setRetryTimeout(ros::WallDuration(5));
         qDebug() << "ROS initialised";
     }
 
@@ -75,8 +67,11 @@ void ROShandler::rosInit()
     {
         qDebug() << "Creating nodehandle";
         ros::NodeHandle n;
+
         vel_pub_ = n.advertise<geometry_msgs::Twist>(
             "/arty_navigation/main_js_cmd_vel", 1);
+        map_sub_ = n.subscribe(
+            "/map", 1, &ROShandler::callback, this);
         timerInit();
         emit log("Successfully connect ROS node");
     }
@@ -89,7 +84,7 @@ void ROShandler::rosInit()
 
 bool ROShandler::checkTopics()
 {
-    using ::operator ==;
+    using ::operator==;
     // check topics to see if the master is correct.
     ros::master::V_TopicInfo topiclist;
     ros::master::getTopics(topiclist);
@@ -97,7 +92,8 @@ bool ROShandler::checkTopics()
     rosout.name = "/rosout";
     rosout.datatype = "rosgraph_msgs/Log";
 
-    auto comparator = [&rosout](const ros::master::TopicInfo& t){
+    auto comparator = [&rosout](const ros::master::TopicInfo& t)
+    {
         return rosout.name == t.name && rosout.datatype == t.datatype;
     };
 
@@ -109,8 +105,8 @@ void ROShandler::setVelAng(double linear, double angular)
 {
     linear_ = linear;
     angular_ = angular;
-    QString s = "Velocity: " + QString::number(linear)
-            + " Angle: " + QString::number(angular);
+    QString s = "Velocity: " + QString::number(linear) + " Angle: "
+        + QString::number(angular);
     emit log(s);
 }
 
@@ -128,4 +124,31 @@ void ROShandler::shutdownROS()
 
 void ROShandler::setMasterIP(QString masterIP) { masterIP_ = masterIP; }
 
-QString ROShandler::getMasterIP(){ return masterIP_; }
+QString ROShandler::getMasterIP() { return masterIP_; }
+
+void ROShandler::callback(const nav_msgs::OccupancyGrid& msg)
+{
+    size_t dataSize = msg.info.width * msg.info.height;
+    auto buffer = new uchar[dataSize];
+
+    for (size_t i = 0; i < dataSize; ++i)
+    {
+        if (msg.data[i] == -1)
+        {
+            buffer[i] = 127.5;
+        }
+        else
+        {
+            buffer[i] = msg.data[i] * 2.55;
+        }
+    }
+
+    auto deleter = [](void* info)
+    {
+        delete[] static_cast<std::vector<uchar>*>(info);
+    };
+
+    QImage map(buffer, msg.info.width, msg.info.height,
+        QImage::Format_Grayscale8, deleter);
+    emit mapUpdate(map);
+}

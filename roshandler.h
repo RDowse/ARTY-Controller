@@ -14,6 +14,8 @@
 #include <QObject>
 #include <qtimer.h>
 #include <QString>
+#include <QImage>
+#include <nav_msgs/OccupancyGrid.h>
 
 class ROShandler : public QObject
 {
@@ -21,6 +23,7 @@ class ROShandler : public QObject
 private:
     double linear_, angular_;
     ros::Publisher vel_pub_;
+    ros::Subscriber map_sub_;
     QString masterIP_;
     QString logMsg_;
     QTimer pubTimer_;
@@ -28,17 +31,20 @@ private:
     void timerInit();
     void rosInit();
     bool checkTopics();
+
 public:
-    explicit ROShandler(QObject *parent);
+    explicit ROShandler(QObject* parent);
     ROShandler();
-    ~ROShandler(){}
+    ~ROShandler() {}
     Q_INVOKABLE void restartROS();
     Q_INVOKABLE void setVelAng(double linear, double angular);
     Q_INVOKABLE void shutdownROS();
     Q_INVOKABLE void setMasterIP(QString masterIP);
     Q_INVOKABLE QString getMasterIP();
+    void callback(const nav_msgs::OccupancyGrid &msg);
 signals:
     void log(QString msg);
+    void mapUpdate(QImage map);
 };
 
 #endif // ROSHANDLER_H
