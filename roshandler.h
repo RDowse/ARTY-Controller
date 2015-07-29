@@ -16,6 +16,8 @@
 #include <QString>
 #include <QImage>
 #include <nav_msgs/OccupancyGrid.h>
+#include <sensor_msgs/Joy.h>
+#include <geometry_msgs/PoseWithCovarianceStamped.h>
 
 class ROShandler : public QObject
 {
@@ -23,7 +25,9 @@ class ROShandler : public QObject
 private:
     double linear_, angular_;
     ros::Publisher vel_pub_;
+    ros::Publisher joystick_pub_;
     ros::Subscriber map_sub_;
+    ros::Subscriber map_meta_sub_;
     QString masterIP_;
     QString logMsg_;
     QTimer pubTimer_;
@@ -42,9 +46,11 @@ public:
     Q_INVOKABLE void setMasterIP(QString masterIP);
     Q_INVOKABLE QString getMasterIP();
     void callback(const nav_msgs::OccupancyGrid &msg);
+    void callbackPos(const geometry_msgs::PoseWithCovarianceStamped& msg);
 signals:
     void log(QString msg);
     void mapUpdate(QImage map);
+    void posUpdate(geometry_msgs::Pose position);
 };
 
 #endif // ROSHANDLER_H

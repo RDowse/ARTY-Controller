@@ -41,7 +41,7 @@ Item{
                 context.lineWidth = 5;
                 context.strokeStyle = '#003300';
                 context.stroke();
-             }
+            }
         }
     }
 }

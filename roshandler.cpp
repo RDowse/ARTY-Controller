@@ -7,12 +7,19 @@
 #include <string>
 namespace
 {
-void sendMsg(ros::Publisher& pub, double linear, double angular)
+void sendMsgVel(ros::Publisher& pub, double linear, double angular)
 {
     geometry_msgs::Twist msg;
     msg.linear.x = linear;
     msg.angular.z = angular;
 
+    pub.publish(msg);
+}
+
+void sendMsgJoy(ros::Publisher& pub,  double linear, double angular){
+    sensor_msgs::Joy msg;
+    msg.axes.push_back(linear);
+    msg.axes.push_back(angular);
     pub.publish(msg);
 }
 
@@ -32,7 +39,8 @@ void ROShandler::timerInit()
 {
     auto onTimeout = [this]()
     {
-        ::sendMsg(vel_pub_, linear_, angular_);
+        //::sendMsgVel(vel_pub_, linear_, angular_);
+        ::sendMsgJoy(joystick_pub_, linear_, angular_);
     };
     QObject::connect(&pubTimer_, &QTimer::timeout, onTimeout);
     QObject::connect(&rosTimer_, &QTimer::timeout, rosSpin);
@@ -42,8 +50,8 @@ void ROShandler::timerInit()
 
 void ROShandler::rosInit()
 {
-    if (!ros::isInitialized())
-    {
+//    if (!ros::isInitialized())
+//    {
         int ros_argc = 3;
         emit log("Attempting to connect");
         // get the devices local ip
@@ -54,32 +62,34 @@ void ROShandler::rosInit()
                 && address != QHostAddress(QHostAddress::LocalHost))
                 localIP = "__ip:=" + address.toString().toStdString();
         }
-
+//localIP.c_str()
         const char* ros_argv[] = { "nothing_important",
-            "__master:=http://10.0.0.147:11311", localIP.c_str()};
+            "__master:=http://10.0.1.3:11311", "__ip:=10.0.1.4"};
         ros::init(ros_argc, const_cast<char**>(&ros_argv[0]),
             "android_ndk_native_cpp");
         ros::master::setRetryTimeout(ros::WallDuration(5));
         qDebug() << "ROS initialised";
-    }
+//    }
 
-    if (checkTopics())
-    {
+//    if (checkTopics())
+//    {
         qDebug() << "Creating nodehandle";
         ros::NodeHandle n;
 
-        vel_pub_ = n.advertise<geometry_msgs::Twist>(
-            "/arty_navigation/main_js_cmd_vel", 1);
-        map_sub_ = n.subscribe(
-            "/map", 1, &ROShandler::callback, this);
+//        vel_pub_ = n.advertise<geometry_msgs::Twist>(
+//            "/navigation/main_js_cmd_vel", 1);
+        joystick_pub_ = n.advertise<sensor_msgs::Joy>(
+                    "/arty/joystick", 1);
+        map_sub_ = n.subscribe("/arty_navigation/map", 1, &ROShandler::callback, this);
+        //map_meta_sub_ = n.subscribe("/arty_navigation/amcl_pose", 1, &ROShandler::callbackPos, this);
         timerInit();
         emit log("Successfully connect ROS node");
-    }
-    else
-    {
-        qDebug() << "Failed to create nodehandle";
-        emit log("Failed to create nodehandle");
-    }
+//    }
+//    else
+//    {
+//        qDebug() << "Failed to create nodehandle";
+//        emit log("Failed to create nodehandle");
+//    }
 }
 
 bool ROShandler::checkTopics()
@@ -139,7 +149,7 @@ void ROShandler::callback(const nav_msgs::OccupancyGrid& msg)
         }
         else
         {
-            buffer[i] = msg.data[i] * 2.55;
+            buffer[i] = (100-msg.data[i]) * 2.55;
         }
     }
 
@@ -150,5 +160,11 @@ void ROShandler::callback(const nav_msgs::OccupancyGrid& msg)
 
     QImage map(buffer, msg.info.width, msg.info.height,
         QImage::Format_Grayscale8, deleter);
+    map = map.mirrored();
+
     emit mapUpdate(map);
 }
+
+//void ROShandler::callbackPos(const geometry_msgs::PoseWithCovarianceStamped& msg){
+//    emit posUpdate(msg.pose.position);
+//}

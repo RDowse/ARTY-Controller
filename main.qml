@@ -16,7 +16,7 @@ ApplicationWindow {
     ROShandler {
         id: roshandler
         onLog: {
-            console.log(msg);
+            //console.log(msg);
             status.text = msg;
         }
     }
@@ -35,6 +35,7 @@ ApplicationWindow {
             MenuItem {
                 text: qsTr("Settings")
                 onTriggered: {
+                    controller.visible = false;
                     loader.source = "SettingsMenu.qml";
                 }
             }
@@ -64,18 +65,35 @@ ApplicationWindow {
                 text: qsTr("Console")
             }
 
-            Image {
+            Item{
                 id:mapArea
-                source: "image://imagehandler/map"
-                cache: false
                 width: 600
                 height: 400
+                function setPosition(position){
+                    chairPosition.x = position.x;
+                    chairPosition.y = position.y;
+                }
+                Image {
+                    id:mapImage
+                    source: "image://imagehandler/map"
+                    cache: false
+                    anchors.fill: parent
 
-                // http://stackoverflow.com/a/17734973
-                function reload() {
-                    var oldSource = source;
-                    source = "";
-                    source = oldSource;
+                    // http://stackoverflow.com/a/17734973
+                    function reload() {
+                        var oldSource = source;
+                        source = "";
+                        source = oldSource;
+                    }
+                }
+                Rectangle{
+                    id: chairPosition
+                    height: 25
+                    width: 25
+                    radius: width*0.5
+                    color: "#00FF00"
+                    x: parent.x + parent.width/2
+                    y: parent.y + parent.height/2
                 }
             }
 
@@ -107,7 +125,10 @@ ApplicationWindow {
         target: roshandler
         onMapUpdate: {
             ImageHandler.setImage(map);
-            mapArea.reload();
+            mapImage.reload();
+        }
+        onPosUpdate: {
+            mapPos.setPosition(position);
         }
     }
 }
