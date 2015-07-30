@@ -4,8 +4,7 @@
 #
 #-------------------------------------------------
 
-QT += core gui androidextras
-QT += qml quick widgets svg declarative
+QT += core gui androidextras qml quick widgets svg declarative
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
@@ -37,7 +36,16 @@ DEPENDPATH += $$PWD/../roscpp_android_ndk/include
 #PRE_TARGETDEPS += $$PWD/../roscpp_android_ndk/lib/libroscpp.a
 
 DISTFILES += \
-    Vibrate.java
+    Vibrate.java \
+    android/AndroidManifest.xml \
+    android/gradle/wrapper/gradle-wrapper.jar \
+    android/gradlew \
+    android/res/values/libs.xml \
+    android/build.gradle \
+    android/gradle/wrapper/gradle-wrapper.properties \
+    android/gradlew.bat
 
 RESOURCES += \
     qml.qrc
+
+ANDROID_PACKAGE_SOURCE_DIR = $$PWD/android

@@ -31,8 +31,10 @@ private:
     QString masterIP_;
     QString logMsg_;
     QTimer pubTimer_;
-    QTimer rosTimer_;
+    QTimer rosSpinTimer_;
+    QTimer rosMasterTimer_;
     void timerInit();
+    void reconnectTimerInit();
     void rosInit();
     bool checkTopics();
 
