@@ -66,6 +66,7 @@ ApplicationWindow {
             }
 
             Item{
+                visible: false
                 id:mapArea
                 width: 600
                 height: 400

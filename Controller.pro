@@ -12,14 +12,19 @@ TARGET = Controller
 TEMPLATE = app
 
 SOURCES += main.cpp\
-    roshandler.cpp \
     hapticfeedback.cpp \
-    imagehandler.cpp
+    imagehandler.cpp \
+    roshandler.cpp \
+    r.cpp
 
 HEADERS  += \
-    roshandler.h \
     hapticfeedback.h \
-    imagehandler.h
+    imagehandler.h \
+    subscriberwrapper.h \
+    Any.h \
+    roshandler.h \
+    publisherwrapper.h \
+    r.h
 
 FORMS    +=
 

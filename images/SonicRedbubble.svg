@@ -12,7 +12,7 @@
    inkscape:version="0.48.4 r9939"
    width="100%"
    height="100%"
-   sodipodi:docname="Bluebubble.svg">
+   sodipodi:docname="SonicRedbubble.svg">
   <metadata
      id="metadata3895">
     <rdf:RDF>
@@ -21,7 +21,7 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title></dc:title>
+        <dc:title />
       </cc:Work>
     </rdf:RDF>
   </metadata>
@@ -49,11 +49,12 @@
      id="defs3884">
     <radialGradient
        id="grad1"
-       cx="0.5"
-       cy="0.7"
-       r="0.7"
-       fx="0.5"
-       fy="0.4">
+       cx="100"
+       cy="96.799999"
+       r="58.799999"
+       fx="100"
+       fy="71.600001"
+       gradientUnits="userSpaceOnUse">
       <stop
          offset="0"
          style="stop-color:rgb(255,255,255)"
@@ -68,6 +69,11 @@
      cx="100"
      cy="80"
      r="42"
-     fill="url(#grad1)"
-     id="circle3891" />
+     id="circle3891"
+     style="fill:url(#grad1)"
+     sodipodi:cx="100"
+     sodipodi:cy="80"
+     sodipodi:rx="42"
+     sodipodi:ry="42"
+     transform="translate(-57.41171,-37.345481)" />
 </svg>

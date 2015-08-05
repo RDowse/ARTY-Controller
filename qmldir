@@ -1,7 +1,6 @@
-import QtQuick 2.0
-
-Rectangle {
-    width: 100
-    height: 62
-}
-
+module /.CustomSettings
+singleton Settings 1.0 Settings.qml
+Controller 1.0 Controller.qml
+Joystick 1.0 Joystick.qml
+SettingsMenu 1.0 SettingsMenu.qml
+TouchPointTracking 1.0 TouchPointTracking.qml

@@ -1,16 +1,19 @@
 import QtQuick 2.0
 import QtMultimedia 5.0
 import QtQuick.Layouts 1.2
+import uk.ac.imperial.settings 1.0
+import uk.ac.imperial.prl 1.0
 
 Item{
     //Area where the joystick can move.
     id: controller
+    //property string controllerAreaColour:
 
     Rectangle{
         id: area
         height: parent.height
         width: parent.height
-        color: "#97FFFF"
+        color: Settings.controllerAreaColour
         radius: width*0.5
         anchors.verticalCenter: parent.verticalCenter
         anchors.horizontalCenter: parent.horizontalCenter
@@ -23,43 +26,6 @@ Item{
         startPosX: controller.width / 2 - radius
         startPosY: controller.height / 2 - radius
     }
-
-//    Canvas{
-//        //area for drawing dots to track the multitouch points.
-
-//        id:multiTouchTracking
-//        anchors.fill: parent
-//        antialiasing: true
-//        property real radius: 25
-//        property list<TouchPoint> touchPoints
-
-//        function updateTouchPoints(touchPoints){
-//            this.touchPoints = touchPoints;
-//            requestPaint();
-//        }
-
-//        function clear(){
-//            var context = getContext("2d");
-
-//            context.clearRect(0, 0, width, height);
-//        }
-
-//        onPaint: {
-//            var context = getContext("2d");
-//            context.save();
-
-//            context.clearRect(0, 0, width, height);
-//            for( var i = 0; i < touchPoints.length; i++){
-//                context.beginPath();
-//                context.arc(touchPoints[i].x, touchPoints[i].y, radius, 0, 2 * Math.PI, false);
-//                context.fillStyle = 'green';
-//                context.fill();
-//                context.lineWidth = 5;
-//                context.strokeStyle = '#003300';
-//                context.stroke();
-//             }
-//        }
-//    }
 
     MultiPointTouchArea {
         id: touchArea
@@ -143,4 +109,5 @@ Item{
             muted: true
         }
     }
+
 }

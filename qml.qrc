@@ -10,5 +10,8 @@
         <file>Joystick.qml</file>
         <file>Controller.qml</file>
         <file>TouchPointTracking.qml</file>
+        <file>qmldir</file>
+        <file>images/SonicBluebubble.svg</file>
+        <file>images/SonicRedbubble.svg</file>
     </qresource>
 </RCC>

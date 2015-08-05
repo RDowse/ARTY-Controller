@@ -1,4 +1,5 @@
 import QtQuick 2.5
+import uk.ac.imperial.settings 1.0
 
 Item{
     id: joystick
@@ -21,19 +22,19 @@ Item{
     Behavior on y {
         SmoothedAnimation {
             easing.type: Easing.Linear
-            duration: 50
+            duration: 100
         }
     }
     Behavior on x {
         SmoothedAnimation {
             easing.type: Easing.Linear
-            duration: 50
+            duration: 100
             }
     }
 
     Image {
         id: image
-        source: touched ? "images/Redbubble.svg" : "images/Bluebubble.svg"
+        source: touched ? Settings.joystickImg1 : Settings.joystickImg2
         anchors.fill: parent
         sourceSize.width: 256
         sourceSize.height: 256
