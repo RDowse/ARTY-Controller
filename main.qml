@@ -13,12 +13,12 @@ ApplicationWindow {
     visible: true
     visibility: Window.FullScreen
 
-    ROShandler {
+    ROSHandlerWrapper {
         id: roshandler
-        onLog: {
-            //console.log(msg);
-            status.text = msg;
-        }
+//        onLog: {
+//            //console.log(msg);
+//            status.text = msg;
+//        }
     }
 
     menuBar: MenuBar {
@@ -122,14 +122,14 @@ ApplicationWindow {
         anchors.fill: parent
     }
 
-    Connections {
-        target: roshandler
-        onMapUpdate: {
-            ImageHandler.setImage(map);
-            mapImage.reload();
-        }
-        onPosUpdate: {
-            mapPos.setPosition(position);
-        }
-    }
+//    Connections {
+//        target: roshandler
+//        onMapUpdate: {
+//            ImageHandler.setImage(map);
+//            mapImage.reload();
+//        }
+//        onPosUpdate: {
+//            mapPos.setPosition(position);
+//        }
+//    }
 }

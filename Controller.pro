@@ -6,6 +6,8 @@
 
 QT += core gui androidextras qml quick widgets svg declarative
 
+QMAKE_CXXFLAGS += -Wno-unused-local-typedefs
+
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 
 TARGET = Controller
@@ -15,16 +17,18 @@ SOURCES += main.cpp\
     hapticfeedback.cpp \
     imagehandler.cpp \
     roshandler.cpp \
-    r.cpp
+    r.cpp \
+    roshandlerwrapper.cpp
 
 HEADERS  += \
     hapticfeedback.h \
     imagehandler.h \
-    subscriberwrapper.h \
     Any.h \
     roshandler.h \
-    publisherwrapper.h \
-    r.h
+    r.h \
+    roshandlerwrapper.h \
+    publisherwrapper.hxx \
+    subscriberwrapper.hxx
 
 FORMS    +=
 
@@ -38,7 +42,7 @@ LIBS += -L$$PWD/../roscpp_android_ndk/lib/ -lroscpp  -lboost_signals -lboost_fil
 INCLUDEPATH += $$PWD/../roscpp_android_ndk/include
 DEPENDPATH += $$PWD/../roscpp_android_ndk/include
 
-#PRE_TARGETDEPS += $$PWD/../roscpp_android_ndk/lib/libroscpp.a
+PRE_TARGETDEPS += $$PWD/../roscpp_android_ndk/lib/libroscpp.a
 
 DISTFILES += \
     Vibrate.java \

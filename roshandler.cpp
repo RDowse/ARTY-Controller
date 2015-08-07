@@ -1,10 +1,10 @@
 #include "roshandler.h"
 
-ROSHandler::ROSHandler() {}
-
-void ROSHandler::run() {
-
+ROSHandler::ROSHandler() {
+    start();
 }
+
+void ROSHandler::run() {}
 
 void ROSHandler::start() { initROS(); }
 
@@ -14,16 +14,19 @@ void ROSHandler::stop()
     ros::shutdown();
 }
 
-void ROSHandler::initTimers(){
-        auto rosSpin = []{
-            ros::spinOnce();
-        };
-        QObject::connect(&rosSpinTimer_, &QTimer::timeout, rosSpin);
-        rosSpinTimer_.start(1000 / 60);
+void ROSHandler::initTimers()
+{
+    auto rosSpin = []
+    {
+        ros::spinOnce();
+    };
+    QObject::connect(&rosSpinTimer_, &QTimer::timeout, rosSpin);
+    rosSpinTimer_.start(1000 / 60);
 }
 
 void ROSHandler::initROS()
 {
+    qDebug()<<"Attempting to init ros";
     if (!ros::isInitialized())
     {
         int ros_argc = 3;
@@ -35,7 +38,7 @@ void ROSHandler::initROS()
                 && address != QHostAddress(QHostAddress::LocalHost))
                 localIP = "__ip:=" + address.toString().toStdString();
         }
-
+        qDebug()<<"found local IP";
         const char* ros_argv[] = { "nothing_important",
             "__master:=http://10.0.0.131:11311", localIP.c_str() };
 
@@ -50,4 +53,3 @@ void ROSHandler::initROS()
 void ROSHandler::deletePublishers() { publishers_.clear(); }
 
 bool ROSHandler::isConnected() { return ros::master::check(); }
-

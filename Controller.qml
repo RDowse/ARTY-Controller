@@ -73,14 +73,14 @@ Item{
         }
 
         function sendVelocityAngle(velocity,angle){
-            roshandler.setVelAng(velocity, angle);
+            roshandler.setTwistMsg(velocity,angle);
         }
 
         onTouchUpdated:{
             //When the joystick is released reset the position.
             if(touchPoints.length === 0){
                 joystick.resetPos();
-                roshandler.setVelAng(0.0,0.0);
+                sendVelocityAngle(0.0,0.0);
                 joystick.onTouch(false);
                 offSound.play();
                 ready = true;
@@ -94,7 +94,6 @@ Item{
             setPosition(newPosition.x,newPosition.y);
             var newVelocityAngle = calcVelocityAngle();
             sendVelocityAngle(newVelocityAngle.velocity, newVelocityAngle.angle);
-            //multiTouchTracking.updateTouchPoints(touchPoints);
             touchPointTracking.updateTouchPoints(touchPoints);
         }
 
