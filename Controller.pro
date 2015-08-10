@@ -6,7 +6,7 @@
 
 QT += core gui androidextras qml quick widgets svg declarative
 
-QMAKE_CXXFLAGS += -Wno-unused-local-typedefs
+QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-unused-parameter
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
 

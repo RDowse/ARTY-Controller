@@ -24,6 +24,7 @@ private:
     std::unordered_map<std::string, types::Any> publishers_;
     QTimer rosSpinTimer_;
     QTimer rosMasterTimer_;
+    std::unique_ptr<ros::NodeHandle> n;
 
     void initROS();
     void initTimers();
@@ -55,9 +56,8 @@ public:
         }
         if (publishers_.find(topic) == std::end(publishers_))
         {
-            ros::NodeHandle n;
             publishers_.emplace(topic, PublisherWrapper<MsgType>(topic));
-            publishers_.at(topic).as<PublisherWrapper<MsgType> >().connect(n);
+            publishers_.at(topic).as<PublisherWrapper<MsgType> >().connect(*n);
         }
         publishers_.at(topic).as<PublisherWrapper<MsgType> >().sendMsg(msg);
         return true;
