@@ -35,14 +35,13 @@ public:
     void connect(ros::NodeHandle& n)
     {
         std::lock_guard<std::mutex> lock(mtx_);
-
-        publisher_.reset(new ros::Publisher(n.advertise<MsgType>(topic_, 1)));
         qDebug() << "Advertising topic " << topic_.data();
+        publisher_.reset(new ros::Publisher(n.advertise<MsgType>(topic_, 1)));
+        qDebug() << "Topic successfully advertised ";
     }
     void sendMsg(const MsgType& msg)
     {
         std::lock_guard<std::mutex> lock(mtx_);
-
         publisher_->publish(msg);
     }
     void disconnect()
@@ -51,7 +50,6 @@ public:
         qDebug() << "Disconnecting topic " << topic_.data();
         publisher_.reset();
     }
-
     PublisherWrapper(const PublisherWrapper& obj)
         : publisher_(PublisherWrapper::copyIfValid(obj.publisher_))
         , topic_(obj.topic_)

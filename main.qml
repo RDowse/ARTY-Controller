@@ -15,10 +15,10 @@ ApplicationWindow {
 
     ROSHandlerWrapper {
         id: roshandler
-//        onLog: {
-//            //console.log(msg);
-//            status.text = msg;
-//        }
+        onLog: {
+            //console.log(msg);
+            status.text = msg;
+        }
     }
 
     menuBar: MenuBar {
@@ -29,14 +29,10 @@ ApplicationWindow {
                 onTriggered: multiTouchTracking.clear();
             }
             MenuItem {
-                text: qsTr("Reconnect")
-                onTriggered: roshandler.restartROS();
-            }
-            MenuItem {
                 text: qsTr("Settings")
                 onTriggered: {
-                    controller.visible = false;
-                    loader.source = "SettingsMenu.qml";
+                    mainLayout.visible = false;
+                    loader.visible = true;
                 }
             }
             MenuItem {
@@ -47,12 +43,16 @@ ApplicationWindow {
     }
 
     GridLayout {
+        id:mainLayout
         anchors.fill: parent
         columns: 2
         rows: 1
         columnSpacing: 2
 
         Column{
+            //set to visible to use these features
+            visible: false
+
             Layout.alignment: Qt.AlignTop
             Layout.column: 1
             Layout.row: 1
@@ -119,7 +119,10 @@ ApplicationWindow {
 
     Loader {
         id: loader
+        source: "SettingsMenu.qml"
         anchors.fill: parent
+        focus: false
+        visible: false
     }
 
 //    Connections {
@@ -132,4 +135,5 @@ ApplicationWindow {
 //            mapPos.setPosition(position);
 //        }
 //    }
+
 }

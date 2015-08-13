@@ -32,12 +32,11 @@ Item{
             }
     }
 
-    Image {
-        id: image
-        source: touched ? Settings.joystickImg1 : Settings.joystickImg2
+    Rectangle{
+        id: joystickImage
         anchors.fill: parent
-        sourceSize.width: 256
-        sourceSize.height: 256
+        radius: joystick.radius
+        color: touched ? Settings.joystickColourActive : Settings.joystickColourInactive
 
         SequentialAnimation{
             ScaleAnimator {

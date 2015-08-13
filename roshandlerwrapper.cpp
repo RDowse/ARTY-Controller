@@ -15,6 +15,7 @@ ROSHandlerWrapper::ROSHandlerWrapper(QObject* parent)
 
 void ROSHandlerWrapper::addPublishers()
 {
+    //Publish at 60hz.
     qDebug()<<"Adding publishers";
     auto onTimeout = [this]
     {
@@ -26,8 +27,17 @@ void ROSHandlerWrapper::addPublishers()
 
 void ROSHandlerWrapper::addSubscribers() {}
 
-void ROSHandlerWrapper::setTwistMsg(double linear, double angular)
+void ROSHandlerWrapper::setTwistMsg(const double& linear, const double& angular)
 {
     twistMsg_.linear.x = linear;
     twistMsg_.angular.z = angular;
+}
+
+void ROSHandlerWrapper::setMasterIP(const QString& masterIP){
+    roshandler_.setMasterIP(masterIP.toStdString());
+}
+
+QString ROSHandlerWrapper::getMasterIP() const{
+    QString tempString = QString::fromStdString(roshandler_.getMasterIP());
+    return tempString;
 }

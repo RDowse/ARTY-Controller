@@ -6,6 +6,7 @@
 
 QT += core gui androidextras qml quick widgets svg declarative
 
+#ignore warnings for unused local typedefs and unused parameters
 QMAKE_CXXFLAGS += -Wno-unused-local-typedefs -Wno-unused-parameter
 
 greaterThan(QT_MAJOR_VERSION, 5): QT += widgets
@@ -17,7 +18,6 @@ SOURCES += main.cpp\
     hapticfeedback.cpp \
     imagehandler.cpp \
     roshandler.cpp \
-    r.cpp \
     roshandlerwrapper.cpp
 
 HEADERS  += \
@@ -25,7 +25,6 @@ HEADERS  += \
     imagehandler.h \
     Any.h \
     roshandler.h \
-    r.h \
     roshandlerwrapper.h \
     publisherwrapper.hxx \
     subscriberwrapper.hxx
@@ -52,7 +51,8 @@ DISTFILES += \
     android/res/values/libs.xml \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat
+    android/gradlew.bat \
+    android/StartActivity.java
 
 RESOURCES += \
     qml.qrc
