@@ -15,6 +15,9 @@ QtObject {
     property string joystickColourActive: "#FF0000"
     property string joystickColourInactive: "#0000FF"
 
+    //Colour themes
+
+
     //Images
     property string joystickImg1: "images/SonicRedbubble.svg"
     property string joystickImg2: "images/SonicBluebubble.svg"

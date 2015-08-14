@@ -32,7 +32,7 @@ HEADERS  += \
 FORMS    +=
 
 CONFIG += mobility
-MOBILITY = 
+MOBILITY =
 
 RESOURCES += qml.qrc
 
@@ -51,8 +51,7 @@ DISTFILES += \
     android/res/values/libs.xml \
     android/build.gradle \
     android/gradle/wrapper/gradle-wrapper.properties \
-    android/gradlew.bat \
-    android/StartActivity.java
+    android/gradlew.bat
 
 RESOURCES += \
     qml.qrc
